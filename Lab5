@@ -1,0 +1,323 @@
+#include <iostream>
+#include <string>
+#include <windows.h>
+#include <cmath>
+
+
+using namespace std;
+
+
+void PrintConsoleMessageRU(const string& str);
+void PrintConsoleMessageRU(const string& str, bool isEndl);
+
+void FirstTask();
+void SecondTask();
+void ThirdTask();
+void FourthTask();
+void FifthTask();
+
+int MaxInt(int* start, int count);
+void Reversit(string& start);
+
+
+
+
+struct fraction
+{
+    int num;
+    int denom;
+
+    void Init(int n, int d)
+    {
+        //Сократить если можно
+        int min = min(n, d);
+        for (int i = 2; i <= min; i++)
+        {
+            while ((n % i == 0) && (d % i == 0))
+            {
+                n /= i;
+                d /= i;
+            }
+        }
+        num = n;
+        denom = d;
+    }
+
+    void Init(string s)
+    {
+        int indexOfChar = s.find("/");
+        if (indexOfChar == string::npos || indexOfChar == 0 || indexOfChar == (s.length() - 1)) throw runtime_error("Неверно введенная дробь");
+
+        int n, d;
+        n = stoi(s.substr(0, indexOfChar));
+        d = stoi(s.substr(indexOfChar + 1));
+
+        Init(n, d);
+    }
+};
+
+struct employee
+{
+    string name;
+    long num;
+};
+
+struct Distance
+{
+    float phut;
+    float duim;
+};
+
+employee getdata();
+void putdata(employee& empl);
+
+Distance getMidDist(Distance first[], int count);
+
+fraction FracSum(fraction a, fraction b);
+
+int main()
+{
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+
+    int taskNumber;
+    do
+    {
+        try
+        {
+
+            PrintConsoleMessageRU("Введите номер задания(1 - 5) (0 - для остановки):");
+            cin >> taskNumber;
+            switch (taskNumber)
+            {
+            case 1:
+                FirstTask();
+                break;
+            case 2:
+                SecondTask();
+                break;
+            case 3:
+                ThirdTask();
+                break;
+            case 4:
+                FourthTask();
+                break;
+            case 5:
+                FifthTask();
+                break;
+            default:
+                PrintConsoleMessageRU("Нет такого задания\n");
+                break;
+            }
+        }
+        catch (const exception& e)
+        {
+            printf("Поймано исключение: ");
+            cout << e.what();
+            return 1;
+        }
+    } while (taskNumber != 0);
+    return 0;
+}
+
+void FirstTask()
+{
+    //Получение дробных числел, заполнение ими массива типа fraction
+    //Вычисляет среднее значение и выводит результат
+    fraction uFractions[20];
+    for (int i = 0; i < 20; i++)
+    {
+        fraction fr;
+        fr.Init(0, 1);
+        uFractions[i] = fr;
+    }
+    string line;
+    int index = 0;
+    cout << "Введите дробь (для нахождения средней дроби) (0 - для остановки): ";
+    cin >> line;
+    while (line != "0" && index < 20)
+    {
+        fraction fr;
+        fr.Init(line);
+        uFractions[index] = fr;
+        index++;
+
+        cout << "Введите дробь (0 - для остановки): ";
+        cin >> line;
+    }
+
+    fraction resFrac;
+    resFrac.Init(0, 1);
+    for (fraction var : uFractions)
+    {
+        resFrac = FracSum(resFrac, var);
+    }
+    resFrac.Init(resFrac.num, (resFrac.denom * index));
+    printf("Среднее значение дробей: %d/%d\n", resFrac.num, resFrac.denom);
+}
+
+fraction FracSum(fraction a, fraction b)
+{
+    fraction resFrac;
+
+    resFrac.Init(a.num * b.denom + b.num * a.denom, b.denom * a.denom);
+
+    return resFrac;
+}
+
+
+void SecondTask()
+{
+    int intArray[20] = {INT_MIN};
+
+    string line;
+    int index = 0;
+
+    cout << "Введите число (для макс.) (0 - для остановки): ";
+    cin >> line;
+    while (line != "0" && index < 20)
+    {
+        intArray[index] = stoi(line);
+        index++;
+
+        cout << "Введите число (0 - для остановки): ";
+        cin >> line;
+    }
+
+    cout << intArray[MaxInt(intArray, index)] << endl;
+}
+
+int MaxInt(int* start, int count)
+{
+    int index = 0;
+    int maxCurrentInt = INT_MIN;
+    for (int i = 0; i < count; i++)
+    {
+        if (*(start + i) > maxCurrentInt)
+        {
+            index = i;
+            maxCurrentInt = *(start + i);
+        }
+    }
+
+    return index;
+}
+
+void ThirdTask()
+{
+    string text;  
+    cout << "Введите строку чтобы ее развернуть: " << endl;
+    if (cin.peek() == '\n')
+        cin.ignore();
+    getline(cin, text);
+    Reversit(text);
+    cout << text << endl;
+}
+
+void Reversit(string& start)
+{
+    int count = start.length();
+    for (int i = 0; i < count/2; i++)
+    {
+        char a = start[i];
+        char b = start[count - i - 1];
+        start[i] = b;
+        start[count - i - 1] = a;
+    }
+}
+
+
+void FourthTask()
+{
+    employee employers[3];
+    for (int i = 0; i < 3; i++)
+    {
+        employers[i] = getdata();
+    }
+    cout << endl;
+
+    for (int i = 0; i < 3; i++)
+    {
+        putdata(employers[i]);
+    }
+}
+
+employee getdata()
+{
+    employee empl;
+    string name;
+    long number;
+
+    cout << "Введите имя сотрудника:";
+    if (cin.peek() == '\n')
+        cin.ignore();
+
+    getline(cin, name);
+    cout << "Введите номер сотрудника:";
+    cin >> number;
+
+
+    empl.name = name;
+    empl.num = number;
+
+    return empl;
+
+}
+
+void putdata(employee& empl)
+{
+    cout << "Сотрудник: " << empl.name << ", номер: " << empl.num << endl;
+}
+
+void FifthTask()
+{
+    Distance dist[5];
+
+    for (int i = 0; i < 5; i++)
+    {
+        cout << "Введите футы под номером " << i + 1 << " :";
+        cin >> dist[i].phut;
+        cout << "Введите дюймы под номером " << i + 1 << " :";
+        cin >> dist[i].duim;
+    }
+    
+
+    Distance res = getMidDist(dist, 5);
+    cout << "Среднее значение футов: " << res.phut << ", среднее значение дюймов: " << res.duim << endl;
+}
+
+Distance getMidDist(Distance first[], int count)
+{
+    float phunt = 0;
+    float duim = 0;
+
+    for (int i = 0; i < count; i++)
+    {
+        phunt += first[i].phut;
+        duim += first[i].duim;
+    }
+
+    Distance res;
+    res.phut = phunt / count;
+    res.duim = duim / count;
+
+    return res;
+}
+
+
+void PrintConsoleMessageRU(const string& str)
+{
+    SetConsoleOutputCP(1251);
+    cout << str;
+    //SetConsoleOutputCP(CP_UTF8);
+}
+
+void PrintConsoleMessageRU(const string& str, bool isEndl)
+{
+    SetConsoleOutputCP(1251);
+    cout << str;
+    if (isEndl) cout << endl;
+    //SetConsoleOutputCP(CP_UTF8);
+}
+
+
