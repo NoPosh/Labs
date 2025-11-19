@@ -1,0 +1,278 @@
+#include <iostream>
+#include <string>
+#include <windows.h>
+#include <cmath>
+
+
+using namespace std;
+
+
+void PrintConsoleMessageRU(const string& str);
+void PrintConsoleMessageRU(const string& str, bool isEndl);
+
+void FirstTask();
+void SecondTask();
+void ThirdTask();
+void FourthTask();
+void FifthTask();
+
+struct Person
+{
+    char* Name = nullptr;
+    int Salary = 0;
+};
+
+void addarrays(float* first, float* second, float* third);
+int compstr(const char* first, const char* second);
+
+void InitPersons(Person* pers);
+void WritePersons(Person* pers);
+void SortPersons(Person* pers);
+void SwapPerson(Person* first, Person* second);
+void ClearPersons(Person* pers);
+
+
+int main()
+{
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+
+    int taskNumber;
+    do
+    {
+        try
+        {
+
+            PrintConsoleMessageRU("Введите номер задания(1 - 5) (0 - для остановки):");
+            cin >> taskNumber;
+            switch (taskNumber)
+            {
+            case 1:
+                FirstTask();
+                break;
+            case 2:
+                SecondTask();
+                break;
+            case 3:
+                ThirdTask();
+                break;
+            case 4:
+                ThirdTask();
+                break;
+            case 5:
+                FourthTask();
+                break;
+            default:
+                PrintConsoleMessageRU("Нет такого задания\n");
+                break;
+            }
+        }
+        catch (const exception& e)
+        {
+            printf("Поймано исключение: ");
+            cout << e.what();
+            return 1;
+        }
+    } while (taskNumber != 0);
+    return 0;
+}
+
+void FirstTask()
+{
+    //3 локальных массива одинакового размера float   
+    float first[] = { 0.1f, 0.2f, 0.3f, 0.4f };
+    float second[] = { 0.3f, 0.2f, 0.1f, 0.5f };
+    float third[4] = {0};
+
+    addarrays(first, second, third);
+}
+
+void addarrays(float *first, float *second, float *third)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        *(third + i) = *(first + i) + *(second + i);
+        cout << "Массив 1, элемент № " << i << " = " << *(first + i) << endl;
+        cout << "Массив 2, элемент № " << i << " = " << *(second + i) << endl;
+        cout << "Массив 3, элемент № " << i << " = " << *(third + i) << endl;
+        cout << endl;
+    }
+}
+
+
+void SecondTask()
+{
+    string first = "Ура я сдал все лабы";
+    string second = "Ура я не сдал все лабы";
+    cout << first << endl;
+    cout << second << endl;
+    cout << "Результат функции: " << compstr(first.c_str(), second.c_str()) << endl;
+}
+
+int compstr(const char* first,const char* second)
+{
+    int f = 0;
+    int s = 0;
+
+    for (int i = 0; ; i++)
+    {
+        if (*(first + i) != '\0' && *(second + i) != '\0')  //Если не нулевые то проверка
+        {            
+            f = *(first + i);
+            s = *(second + i);
+
+            if (f < s) return -1;
+            else if (s < f) return 1;
+        }
+        else
+        {
+            if (*(first + i) == '\0' && *(second + i) != '\0') return -1;
+            if (*(first + i) == '\0' && *(second + i) == '\0') return 0;
+            if (*(first + i) != '\0' && *(second + i) == '\0') return 1;
+        }
+    }
+    return 0;
+}
+
+
+void ThirdTask()
+{
+    //Массив указателей на 10 массивов типа int
+    int* mainArr[10];
+
+    for (int i = 0; i < 10; i++)
+    {
+        int* arr = new int[10];
+        for (int j = 0; j < 10; j++)
+        {
+            arr[j] = i * 10 + j;
+            cout << arr[j] << " ";
+        }
+        mainArr[i] = arr;
+        cout << endl;
+    }
+
+    
+
+    for (int i = 0; i < 10; i++)
+    {
+        delete[] mainArr[i];
+    }
+}
+
+/*
+void Reversit(string& start)
+{
+    int count = start.length();
+    for (int i = 0; i < count / 2; i++)
+    {
+        char a = start[i];
+        char b = start[count - i - 1];
+        start[i] = b;
+        start[count - i - 1] = a;
+    }
+}
+
+int MaxInt(int* start, int count)
+{
+    int index = 0;
+    int maxCurrentInt = INT_MIN;
+    for (int i = 0; i < count; i++)
+    {
+        if (*(start + i) > maxCurrentInt)
+        {
+            index = i;
+            maxCurrentInt = *(start + i);
+        }
+    }
+
+    return index;
+}
+*/
+
+void FourthTask()
+{
+    Person* persons = new Person[5]{};
+
+    InitPersons(persons);
+    cout << endl;
+    WritePersons(persons);
+    SortPersons(persons);
+    cout << endl;
+    WritePersons(persons);
+    ClearPersons(persons);
+
+    delete[] persons;
+}
+
+void InitPersons(Person* pers)
+{
+    for (int i = 0; i < 5; i++)
+    {
+        char buffer[100];
+        cout << "Сотрудник " << i << endl;
+        cout << "Введите имя сотрудника: ";
+        cin >> buffer;
+        (pers + i)->Name = new char[strlen(buffer) + 1];
+        strcpy_s(pers[i].Name, strlen(buffer) + 1, buffer);
+
+        cout << "Введите зарплату сотрудника: ";
+        cin >> (pers + i)->Salary;
+    }    
+}
+
+void WritePersons(Person* pers)
+{
+    for (int i = 0; i < 5; i++)
+    {
+        cout << "Сотрудник " << i << endl;
+        cout << "Имя сотрудника: " << (pers + i)->Name << endl;
+        cout << "Зарплату сотрудника: " << (pers + i)->Salary << endl;
+    }
+}
+
+void SortPersons(Person* pers)
+{
+    for (int i = 4; i > 0; i--)
+        for (int j = 0; j < i; j++)
+        {
+            if ((pers + j)->Salary < (pers + j + 1)->Salary) SwapPerson((pers + j), (pers + j + 1));
+        }
+}
+
+void SwapPerson(Person* first, Person* second)
+{
+    Person ptr = *first;
+    *first = *second;
+    *second = ptr;
+}
+
+void ClearPersons(Person* pers)
+{
+    for (int i = 0; i < 5; i++)
+    {
+        delete[] pers[i].Name;
+    }
+}
+
+void FifthTask()
+{
+
+}
+
+
+
+void PrintConsoleMessageRU(const string& str)
+{
+    SetConsoleOutputCP(1251);
+    cout << str;
+    //SetConsoleOutputCP(CP_UTF8);
+}
+
+void PrintConsoleMessageRU(const string& str, bool isEndl)
+{
+    SetConsoleOutputCP(1251);
+    cout << str;
+    if (isEndl) cout << endl;
+    //SetConsoleOutputCP(CP_UTF8);
+}
