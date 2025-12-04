@@ -24,6 +24,7 @@ struct Person
 
 void addarrays(float* first, float* second, float* third);
 int compstr(const char* first, const char* second);
+void SecondMain(string& first, string& second);
 
 void InitPersons(Person* pers);
 void WritePersons(Person* pers);
@@ -82,19 +83,24 @@ void FirstTask()
     //3 локальных массива одинакового размера float   
     float first[] = { 0.1f, 0.2f, 0.3f, 0.4f };
     float second[] = { 0.3f, 0.2f, 0.1f, 0.5f };
-    float third[4] = {0};
+    float third[4] = { 0 };
 
     addarrays(first, second, third);
 }
 
-void addarrays(float *first, float *second, float *third)
+void addarrays(float* first, float* second, float* third)
 {
     for (int i = 0; i < 4; i++)
     {
         *(third + i) = *(first + i) + *(second + i);
+        cout << "------------------------------------" << endl;
         cout << "Массив 1, элемент № " << i << " = " << *(first + i) << endl;
+        cout << "------------------------------------" << endl;
         cout << "Массив 2, элемент № " << i << " = " << *(second + i) << endl;
+        cout << "------------------------------------" << endl;
         cout << "Массив 3, элемент № " << i << " = " << *(third + i) << endl;
+        cout << "------------------------------------" << endl;
+        cout << "------------------------------------" << endl;
         cout << endl;
     }
 }
@@ -102,14 +108,47 @@ void addarrays(float *first, float *second, float *third)
 
 void SecondTask()
 {
-    string first = "Ура я сдал все лабы";
-    string second = "Ура я не сдал все лабы";
+    string first = "АБВГД";
+    string second = "АБВГАД";
     cout << first << endl;
     cout << second << endl;
-    cout << "Результат функции: " << compstr(first.c_str(), second.c_str()) << endl;
+
+    SecondMain(first, second);
+
+    cout << "Введите первую строку: ";
+    cin >> first;
+    cout << "Введите вторую строку: ";
+    cin >> second;
+        SecondMain(first, second);
+    /*
+    int res = compstr(first.c_str(), second.c_str());
+    cout << "Результат функции: " << res;
+    if (res == -1)
+        cout << " (первая строка - раньше по алфавиту)";
+    else if (res == 0)
+        cout << " (одинаковы)";
+    else
+        cout << " (вторая строка - раньше по алфавиту)";
+    cout << endl << endl;
+    */
+    
 }
 
-int compstr(const char* first,const char* second)
+void SecondMain(string& first, string& second)
+{
+    //Вычисляет res для двух строк
+    int res = compstr(first.c_str(), second.c_str());
+    cout << "Результат функции: " << res;
+    if (res == -1)
+        cout << " (первая строка - раньше по алфавиту)";
+    else if (res == 0)
+        cout << " (одинаковы)";
+    else
+        cout << " (вторая строка - раньше по алфавиту)";
+    cout << endl << endl;
+}
+
+int compstr(const char* first, const char* second)
 {
     int f = 0;
     int s = 0;
@@ -117,7 +156,7 @@ int compstr(const char* first,const char* second)
     for (int i = 0; ; i++)
     {
         if (*(first + i) != '\0' && *(second + i) != '\0')  //Если не нулевые то проверка
-        {            
+        {
             f = *(first + i);
             s = *(second + i);
 
@@ -152,43 +191,11 @@ void ThirdTask()
         cout << endl;
     }
 
-    
-
     for (int i = 0; i < 10; i++)
     {
         delete[] mainArr[i];
     }
 }
-
-/*
-void Reversit(string& start)
-{
-    int count = start.length();
-    for (int i = 0; i < count / 2; i++)
-    {
-        char a = start[i];
-        char b = start[count - i - 1];
-        start[i] = b;
-        start[count - i - 1] = a;
-    }
-}
-
-int MaxInt(int* start, int count)
-{
-    int index = 0;
-    int maxCurrentInt = INT_MIN;
-    for (int i = 0; i < count; i++)
-    {
-        if (*(start + i) > maxCurrentInt)
-        {
-            index = i;
-            maxCurrentInt = *(start + i);
-        }
-    }
-
-    return index;
-}
-*/
 
 void FourthTask()
 {
@@ -218,7 +225,7 @@ void InitPersons(Person* pers)
 
         cout << "Введите зарплату сотрудника: ";
         cin >> (pers + i)->Salary;
-    }    
+    }
 }
 
 void WritePersons(Person* pers)
